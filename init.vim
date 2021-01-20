@@ -1,3 +1,11 @@
+" Vim plug download if not done
+
+if empty(glob('~/.config/nvim/autoload/plug.vim'))
+  silent !curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs
+    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
+
 " Plugins
 
 call plug#begin('~/.config/nvim/plugged')
@@ -6,9 +14,9 @@ Plug 'jiangmiao/auto-pairs'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-repeat'
-Plug 'idris-hackers/idris-vim'
+Plug 'idris-hackers/idris-vim', { 'for': 'idris' }
 Plug 'joshdick/onedark.vim'
-Plug 'caenrique/nvim-toggle-terminal'
+Plug 'vim-syntastic/syntastic'
 call plug#end()
 
 " GENERAL
@@ -70,6 +78,10 @@ nnoremap <silent> ]a :prev<CR>
 " Remap %% %:h in commandline to provide easy relative path for current buffer
 " cnoremap <expr> %% getcmdtype() == ':' ? expand('%:h').'/' : '%%'
 
+" PANES
+let g:netrw_banner = 0  " Hide the banner
+" follow wilignore settings 
+let g:netrw_list_hide = &wildignore
 
 set matchpairs+=<:>
 
@@ -80,6 +92,12 @@ nnoremap <C-h> :vertical resize +1<CR>
 
 nnoremap <leader>, :nohl<CR>
 
+
+nnoremap <UP> <C-w>k
+nnoremap <DOWN> <C-w>j
+nnoremap <RIGHT> <C-w>l
+nnoremap <LEFT> <C-w>h
+
 " TERMINAL
 
 tnoremap <Esc> <C-\><C-n>
@@ -88,5 +106,19 @@ tnoremap <Esc> <C-\><C-n>
 " runtime './syntax/cool.vim'
 " au BufRead,BufNewFile *.cl set filetype=cool
 
-nnoremap <silent> <C-z> :sp<CR>:ToggleTerminal<CR>
-tnoremap <silent> <C-z> <C-\><C-n>:ToggleTerminal<CR>:q<CR>
+nnoremap <silent> <M-z> :sp<CR>:resize -8<CR>:term<CR>clear<CR>
+
+vnoremap < <gv
+vnoremap > >gv
+
+
+" Syntastic settings
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+
